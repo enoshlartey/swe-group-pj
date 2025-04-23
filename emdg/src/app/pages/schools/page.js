@@ -1,4 +1,6 @@
-import UniversityList from '/Users/danielle/Downloads/swe-group-pj-2/emdg/src/components/school.js';
+import UniversityList from '../../../components/school.js';
+
+
 
 
 const UniversityPage = () => {
