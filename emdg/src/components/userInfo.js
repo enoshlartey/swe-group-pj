@@ -1,68 +1,71 @@
-import React, { useState } from "react";
-import UserInfoDisplay from "./userInfoDisplay";
-import studentData from "../data/studentData";
-import { PDFDownloadLink, Document, Page, Text } from "@react-pdf/renderer";
+import React from "react";
+import { PDFDownloadLink, Document, Page, Text, StyleSheet } from "@react-pdf/renderer";
 
-const InfoCard = () => {
-    const [selectedStudent, setSelectedStudent] = useState(null);
+const styles = StyleSheet.create({
+  page: { padding: 30, fontFamily: "Helvetica" },
+  title: { fontSize: 20, marginBottom: 10, textAlign: "center" },
+  section: { marginBottom: 8 },
+  label: { fontWeight: "bold" }
+});
 
-    const handleCardClick = (student) => {
-        setSelectedStudent(student);
-    };
+const UserInfo = ({ student, onBack }) => {
+  if (!student) return <div className="max-w-lg mx-auto p-6">No student selected</div>;
 
-    const PDFDocument = () => (
-        <Document>
-            <Page>
-                <Text style={{ fontSize: 18, marginBottom: 10 }}>Student Profile</Text>
-                {selectedStudent ? (
-                    <div className="user-info-detail">
-                        <Text style={{ fontSize: 16 }}>Name: {selectedStudent.first_name} {selectedStudent.last_name}</Text>
-                        <Text>Classification: {selectedStudent.degree_classification}</Text>
-                        <Text>Degree: {selectedStudent.degree_program}</Text>
-                        <Text>Email: {selectedStudent.email}</Text>
-                        <Text>Gender: {selectedStudent.gender}</Text>
-                    </div>
-                ) : (
-                    <Text>No student selected</Text>
-                )}
-            </Page>
-        </Document>
-    );
+  const PDFDocument = () => (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.title}>Student Profile</Text>
+        <Text style={styles.section}><Text style={styles.label}>Name:</Text> {student.first_name} {student.last_name}</Text>
+        <Text style={styles.section}><Text style={styles.label}>Degree:</Text> {student.degree_program}</Text>
+        <Text style={styles.section}><Text style={styles.label}>Classification:</Text> {student.degree_classification}</Text>
+        <Text style={styles.section}><Text style={styles.label}>Email:</Text> {student.email}</Text>
+        <Text style={styles.section}><Text style={styles.label}>Gender:</Text> {student.gender}</Text>
+      </Page>
+    </Document>
+  );
 
-    return (
-        <div className="max-w-lg mx-auto p-6">
-            <h1 className="text-2xl font-bold mb-6 text-center">Who's your next pick?</h1>
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="w-full flex justify-center">
+        <h1 className="text-2xl font-bold text-center">Student Information</h1>
+      </div>
+      <div className="user-info-detail max-w-lg mx-auto p-6 flex flex-col items-center text-center">
+      {student.avatar_url ? (
+  <img
+    src={student.avatar_url}
+    alt="Avatar"
+    className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-white"
+  />
+) : (
+  <div className="w-24 h-24 rounded-full bg-gray-700 mb-4 border-4 border-white flex items-center justify-center text-white text-sm">
+    No Image
+  </div>
+)}
 
-            {selectedStudent ? (
-                <div className="user-info-detail">
-                    <h2 className="text-xl font-bold">{selectedStudent.first_name} {selectedStudent.last_name}</h2>
-                    <p>Classification: {selectedStudent.degree_classification}</p>
-                    <p>Degree: {selectedStudent.degree_program}</p>
-                    <p>Email: {selectedStudent.email}</p>
-                    <p>Gender: {selectedStudent.gender}</p>
-                    <PDFDownloadLink document={<PDFDocument />} fileName="student_profile.pdf">
-                        {({ loading }) =>
-                            loading ? "Loading PDF..." : "Download PDF"
-                        }
-                    </PDFDownloadLink>a
-                    <button onClick={() => setSelectedStudent(null)} className="mt-4 text-blue-500">Back to list</button>
-                </div>
-            ) : (
-                studentData.map((student) => (
-                    <UserInfoDisplay
-                        key={student.id}
-                        firstName={student.first_name}
-                        lastName={student.last_name}
-                        classification={student.degree_classification}
-                        degree={student.degree_program}
-                        onClick={() => handleCardClick(student)} 
-                    />
-                ))
-            )}
+        <h2 className="text-xl font-bold">{student.first_name} {student.last_name}</h2>
+        <p>Classification: {student.degree_classification}</p>
+        <p>Degree: {student.degree_program}</p>
+        <p>Email: {student.email}</p>
+        <p>Gender: {student.gender}</p>
 
-            <p className="text-sm text-gray-500 mt-4 text-center">Click on a student card to see more details</p>
+        <div className="mt-4 flex gap-2">
+          <PDFDownloadLink
+            document={<PDFDocument />}
+            fileName="student_profile.pdf"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            {({ loading }) => loading ? "Loading PDF..." : "Download PDF"}
+          </PDFDownloadLink>
+          <button
+            onClick={onBack}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Back to list
+          </button>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-export default InfoCard;
+export default UserInfo;
