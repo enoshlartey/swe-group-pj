@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.0",
     "babel-plugin-react-compiler": "^19.0.0-beta-e993439-20250405",
     "next": "15.2.4",
     "react": "^19.0.0",

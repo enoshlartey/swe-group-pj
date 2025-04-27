@@ -66,7 +66,7 @@ export default function RootLayout({ children }) {
         <nav className="w-full px-9 py-9 flex justify-between">
           <div>
             <h4 className="text-2xl font-black">
-              <a href="/">EMDG-SWE</a>
+              <a href="/">Next Recruit.</a>
             </h4>
           </div>
           <div className="flex gap-4">
